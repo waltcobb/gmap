@@ -1,0 +1,1 @@
+If you're using windows, this directory is where you should install nmap.
