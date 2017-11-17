@@ -8,6 +8,10 @@ Dependencies:<br>
   2. nmap<br>
      - linux/macOS:<br> 
        - git clone https://github.com/nmap/nmap.git (while in the gmap root directory) <br>
+       - change directory into the nmap directory, then:
+         - ./configure
+         - make
+         - make install
      - windows:<br>
        - install the nmap for windows into the project directory 'winmap' (https://nmap.org/dist/nmap-7.60-setup.exe)<br>
 
