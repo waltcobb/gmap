@@ -7,7 +7,7 @@ Dependencies:<br>
      - apscheduler<br>
   2. nmap<br>
      - linux/macOS:<br> 
-       - it is preinstalled into the project directory and should be ready to go<br>
+       - unzip the 'nmap.zip' in the root directory of the project. (this should create the 'nmap' directory in the project dir)<br>
      - windows:<br>
        - install the nmap for windows into the project directory 'winmap'<br>
 
