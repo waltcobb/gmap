@@ -70,8 +70,69 @@ def startScan():
 		isScanning = False
 		del scanQue[0]
 		print('done')
+###################################################################################################################
 
 
+# TESTING DIFFERENT OUTPUT LAYOUTS
+
+
+
+
+# Builds the input needed for the vis.js graphics and passes
+# the input into the page to be displayed
+
+# @app.route("/graph")
+# def loadGraph():
+# 	data = gooeymap.query('select ip, port, service, version from hosts join services on hosts.id = services.id')
+# 	graph = 'dinetwork {'
+# 	for host in range(len(data)):
+# 		for info in range(len(data[0])):
+# 			thing = str(data[host][info])		# Cleaning some bad characters to make things easier for now
+# 			thing = thing.replace('-', '..')	# may find a more elegant way to fix this later.
+# 			thing = thing.replace(';', '')
+# 			thing = thing.replace(':', '')
+# 			thing = thing.replace('(', '')
+# 			thing = thing.replace(')', '')
+# 			thing = thing.replace(' ', '_')
+# 			graph += thing
+# 			if info == 0:
+# 				graph += ' -- '
+# 			elif info != len(data[0]) - 1:
+# 				graph += ' -- '
+# 		graph += ' ; '
+# 	graph += '}'
+# 	return render_template('./graph.html', graph = graph
+# 	)
+
+# 'select ip, port, service, version from hosts join services on hosts.id = services.id where version = "vsftpd 2.3.4"'
+
+#**********************************************************************
+
+@app.route("/graph")
+def loadGraph():
+	arg = request.args.get('g', type=str)
+	data = gooeymap.query(arg)
+	graph = 'dinetwork {'
+	for host in range(len(data)):
+		for info in range(len(data[0])):
+			thing = str(data[host][info])		# set delimiters to allow javascript to read variables, changes back later.
+			thing = thing.replace('-', '_DASH_')	# may find a more elegant way to fix this later.
+			thing = thing.replace(';', '_SEMICOLON_')
+			thing = thing.replace(':', '_COLON_')
+			thing = thing.replace('(', '_OPENPAR_')
+			thing = thing.replace(')', '_CLOSEPAR_')
+			thing = thing.replace(' ', '_SPACE_')
+			graph += thing
+			if info == 0:
+				graph += ' -- '
+			elif info != len(data[0]) - 1:
+				graph += '_NEWLINE_'
+		graph += ' ; '
+	graph += '}'
+	return render_template('./graph.html', graph = graph
+	)
+
+###################################################################################################################
 #calls the startScan functino every 5 seconds
 
 scheduler = BackgroundScheduler()
