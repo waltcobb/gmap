@@ -117,7 +117,31 @@ def populateDB(ip, ports, services, versions):
 def query(query):
 	conn = sqlite3.connect(r'./machines.sqlite')
 	c = conn.cursor()
-
-	c.execute(query)
+	newQuery = validateQuery(query)
+	c.execute(newQuery)
+	#c.execute(query)
 	table = c.fetchall()
 	return table
+
+
+def validateQuery(input):
+	q = input.split('.')
+#if input is an ip address, check for its validity, then generate proper sql query that displays info for that ip
+	if len(q) == 4:
+		condition = True
+		#below check if each block of ip falls under the range of 0-255
+		for i in q:
+			pattern = re.match('2[0-5][0-5]|1[0-9][0-9]|[0-9]$', i)
+			if i == None:
+				condition = False
+				break
+		if condition:
+			ip = q[0] + '.' + q[1] + '.' + q[2] + '.' + q[3]
+			query = "select ip, port, service, version from hosts join services on hosts.id = services.id where ip = '%s'" % ip
+			return query
+#if input is a port number, check for its validity, then generate proper query that lists all ip with that port open
+	elif len(q) == 1: 
+		if int(q[0]) <= 65535 & int(q[0]) >= 1:
+			query = "select ip, port, service, version from hosts join services on hosts.id = services.id where port = '%s'" % q[0]
+			return query
+
