@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+  <title>gmap graph view</title>
+  <script src="../static/javascript/vis.js"></script>
+  <link href="../static/javascript/vis.css" rel="stylesheet" type="text/css" />
+
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+
+    /*makes the visualization div the full screen for better view*/
+    .visualization {    
+    position: fixed;		
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: #222222
+    }
+
+  </style>
+
+</head>
+<body>
+<div id="visualization" class="visualization"></div>
+
+
+
+<script type="text/javascript">
+
+var container = document.getElementById('visualization');
+
+var graph = '{{graph}}'; 
+graph =	graph.replace(/&gt;/g, ">");
+graph =	graph.replace(/\//g, "");
+
+
+var DOTstring = graph ;
+var parsedData = vis.network.convertDot(DOTstring);
+var data = {
+  nodes: parsedData.nodes,
+  edges: parsedData.edges
+}
+
+for (var i = data.nodes.length - 1; i >= 0; i--) {
+	var node = data.nodes[i];
+	node.label = node.label.replace(/_NEWLINE_/g, '\n')
+	node.label = node.label.replace(/_DASH_/g, '-')
+	node.label = node.label.replace(/_SPACE_/g, ' ')
+	node.label = node.label.replace(/_CLOSEPAR_/g, ')')
+	node.label = node.label.replace(/_OPENPAR_/g, '(')
+	node.label = node.label.replace(/_COLON_/g, ':')
+	node.label = node.label.replace(/_SEMICOLON_/g, ';')
+  	if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(node.id)) {  
+		node.group = "host";  	
+	}else{
+		node.group = "info";
+	}
+}
+
+
+console.log(data);
+
+var options = {
+    "nodes": {
+    "borderWidth": 2,
+  },
+
+
+  "edges": {
+    "smooth": {
+      "type": "continuous",
+      "forceDirection": "none"
+    },
+   "chosen": true,
+   "color": {
+      "color": "#848484",
+      "highlight": "#FFFFFF",
+      "inherit": "from",
+      "opacity":1.0
+    },
+    "width": 3,
+  },
+
+  "interaction":{
+    "multiselect": true
+   },
+
+  "groups": {
+  	
+  	"host": {
+  		"shape": "circle",
+  	},
+
+  	"info": {
+  		"shape": "box",
+		"color": 'rgb(0,255,140)',
+
+  	},
+  },
+
+
+  "physics": {
+  	"enabled": true,
+    "barnesHut": {
+      "gravitationalConstant": -4000,
+      "centralGravity": 0.015,
+      "springLength": 35,
+	  "springConstant": 0.1,
+      "avoidOverlap": 1,
+      "damping": 1,
+    },
+
+    "minVelocity": 0.75,
+    "stabilization": {
+	"enabled": true,
+	"iterations": 1000,
+	"updateInterval": 25,
+    },
+  }
+}
+var network = new vis.Network(container, data, options);
+
+network.on("stabilizationIterationsDone", function () {
+    network.setOptions( { physics: false } );
+});
+
+</script>
+</body>
+</html>
