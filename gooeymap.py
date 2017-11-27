@@ -125,6 +125,10 @@ def query(query):
 
 #The more efficient version
 def validateQuery(input):
+	if (len(input) == 1) & (input[0] == '*'):
+		#allow user to see all information
+		query = "select ip, port, service, version from hosts join services on hosts.id = services.id"
+		return query
 	query = "select ip, port, service, version from hosts join services on hosts.id = services.id where ip = '%s' or port = '%s' or service = '%s' or version = '%s'" % (input, input, input, input)
 	return query
 
