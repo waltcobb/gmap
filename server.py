@@ -122,6 +122,7 @@ def loadGraph():
 			thing = thing.replace('(', '_OPENPAR_')
 			thing = thing.replace(')', '_CLOSEPAR_')
 			thing = thing.replace(' ', '_SPACE_')
+			thing = thing.replace('+', '_PLUS_')
 			graph += thing
 			if info == 0:
 				graph += ' -- '
