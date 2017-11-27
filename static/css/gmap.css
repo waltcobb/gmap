@@ -1,15 +1,15 @@
 /* Created by Naim Hakeem */
 
 /*
-	This is the main body of the gui, font is set up with no tails(serif)
-	Have a default abstract image taken from the images folder
+    This is the main body of the gui, font is set up with no tails(serif)
+    Have a default abstract image taken from the images folder
 */
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-image: url("../images/background.jpg");
+    background-image: url("../images/mountain.jpg");
 
 /*
-	Create a buffer for the information & tables to be displayed correctly (in an even manner) and not flush to the top or bottom
+    Create a buffer for the information & tables to be displayed correctly (in an even manner) and not flush to the top or bottom
 */
 }
 .filler {
@@ -44,15 +44,15 @@ form {
     float: left;
 
 /*
-	Text when user inputs it; red color, has font size and type along with a dark gray background set at 80% opacity
+    Text when user inputs it; white color, has font size and type along with a dark gray background set at 80% opacity
 */   
 }
 input[type=text] {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
-    background-color: rgba(45, 45, 45, .8);
-    color: rgb(202, 21, 2);
-    border-color: rgb(88, 4, 4);
+    background-color: rgba(45, 45, 45, .65);
+    color: rgb(255, 255, 255);
+    border-color: rgb(43, 173, 69);
     float: left;
     border-radius: 5px;
 }
@@ -62,15 +62,15 @@ input[type=submit] {
     width: 30px;
 }
 
-/*	
-	Table header - the top line on the table
+/*  
+    Table header - the top line on the table
 */
 th {
-    color: rgb(202, 21, 2);
+    color: rgba(255, 255, 255, .8);
 }
 
 /*
-	Table dom - original color of text in the rows (and height) in the table
+    Table dom - original color of text in the rows (and height) in the table
 */
 td {
     height: 40px;
@@ -78,19 +78,19 @@ td {
 }
 
 /*
-	Table row - rows in the table to be offset a different color if even (dark red ones)	
+    Table row - rows in the table to be offset a different color if even (dark green ones)  
 */
 tr:nth-child(even) {
-    background-color: rgba(88, 4, 4, .8);
+    background-color: rgba(0, 130, 71, .8);
 }
 
 /*
-	Once you see what ports are open, it displayes them within the table (gray with 80% opacity)
+    Once you see what ports are open, it displayes them within the table (gray with 80% opacity)
 */
 .result {
     border-radius: 5px;
     margin: auto;
-    width: 80%;
+    width: 85%;
     background-color: rgba(45, 45, 45, .8);
     margin-top: 40px;
 }
@@ -106,30 +106,30 @@ tr:nth-child(even) {
 }
 
 /*
-	Lists IPs that are being scanned (top right of screen) text is set at red with the background the same gray
+    Lists IPs that are being scanned (top right of screen) text is set at red with the background the same gray
 */
 .scanningdiv {
     height:75%;
     width: 15%;
-    background-color: rgba(45, 45, 45, .8);
+    background-color: rgba(45, 45, 45, .75);
     float:right;
     float:top;
     border-radius: 5px;
     margin-right:20%;
     margin-top:3%;
     text-align: center;
-    color: rgb(202, 21, 2);
+    color: rgb(255, 255, 255);
 }
 
 /*
-	The header to the IPs that are scanned
+    The header to the IPs that are scanned
 */
 .scanning {
-    color: rgb(105, 105, 105);
+    color: rgb(58, 255, 97);
 }
 
 /*
-	Adds a buffer to the top of the scanner
+    Adds a buffer to the top of the scanner
 */
 .scanningtitle {
     margin-top: 10px;
