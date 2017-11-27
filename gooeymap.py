@@ -123,8 +123,13 @@ def query(query):
 	table = c.fetchall()
 	return table
 
-
+#The more efficient version
 def validateQuery(input):
+	query = "select ip, port, service, version from hosts join services on hosts.id = services.id where ip = '%s' or port = '%s' or service = '%s' or version = '%s'" % (input, input, input, input)
+	return query
+
+#Old version
+def validateQuery2(input):
 	q = input.split('.')
 #if input is an ip address, check for its validity, then generate proper sql query that displays info for that ip
 	if len(q) == 4:
