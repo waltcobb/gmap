@@ -118,8 +118,7 @@ def query(query):
 	conn = sqlite3.connect(r'./machines.sqlite')
 	c = conn.cursor()
 	newQuery = validateQuery(query)
-	c.execute(newQuery)
-	#c.execute(query)
+	c.execute(query)
 	table = c.fetchall()
 	return table
 
