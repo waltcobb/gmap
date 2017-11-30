@@ -118,12 +118,22 @@ def query(query):
 	conn = sqlite3.connect(r'./machines.sqlite')
 	c = conn.cursor()
 	newQuery = validateQuery(query)
-	c.execute(query)
+	c.execute(newQuery)
+	#c.execute(query)
 	table = c.fetchall()
 	return table
 
-
+#The more efficient version
 def validateQuery(input):
+	if (len(input) == 1) & (input[0] == '*'):
+		#allow user to see all information
+		query = "select ip, port, service, version from hosts join services on hosts.id = services.id"
+		return query
+	query = "select ip, port, service, version from hosts join services on hosts.id = services.id where ip = '%s' or port = '%s' or service = '%s' or version = '%s'" % (input, input, input, input)
+	return query
+
+#Old version
+def validateQuery2(input):
 	q = input.split('.')
 #if input is an ip address, check for its validity, then generate proper sql query that displays info for that ip
 	if len(q) == 4:
