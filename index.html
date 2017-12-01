@@ -39,14 +39,18 @@
             <input type="submit" value="Search">
             </form>   
           </div>
-          <br>
+          <br><br>
+
           <div class="form-query">
             <form action="/query" id="queryForm">
-            <input type="text" name="q" placeholder="Enter query"/>
-            <input type="submit" value="Search" />
+            <input type="text" name="q" placeholder="Enter query">
+            <input type="submit" value="Search">
+            <p class="input-instruction">Enter an ip, port number, service name, or service version. Enter * for all information</p>
             </form>
           </div>
-        </div>  
+        </div>
+        <br><br>
+        
         <!--the bottom lines of code displays the result of the searched IP or Query in formating under the 
         fields of IP, Port, Services and Version.-->    
         <div id="result" class="result">
