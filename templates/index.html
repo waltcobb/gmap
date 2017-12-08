@@ -100,16 +100,13 @@
         $.get('/showque', function(data, status){
           data = data.toString(); 
           data = data.replace(/,/g, "<br>");
-          console.log(data);
           document.getElementById("scanning").innerHTML=data;
         })
         $.get('/isscanning', function(data, status){
         	if(data){
-				console.log('its true')
 				document.getElementById("loader").innerHTML='<div class="loader"></div>';
         	}else{
 				document.getElementById("loader").innerHTML=''
-        		console.log('its flase')
         	}
         // document.getElementById("scanning").innerHTML=data;
         })
