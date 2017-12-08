@@ -104,6 +104,10 @@ def populateDB(ip, ports, services, versions):
 		c.execute("INSERT INTO services (service, port, version, id) VALUES (?, ?, ?, ?)",\
 			 	 (services[i], ports[i], versions[i], ip_id))
 
+
+	c.execute("DELETE FROM services WHERE services.port IS NULL OR trim(services.port) = '';")
+
+
 	conn.commit()
 	conn.close()
 
