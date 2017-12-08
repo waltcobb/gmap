@@ -86,7 +86,7 @@ def populateDB(ip, ports, services, versions):
 	versions = versions.split(", ")
 
 	c.execute("CREATE TABLE IF NOT EXISTS hosts(ip TEXT, possibleOS TEXT DEFAULT 'unknown',"\
-			  "beenPwned integer DEFAULT 0, talksTo TEXT DEFAULT 'none',"\
+			  "beenPwned integer DEFAULT 0, talksTo TEXT DEFAULT '',"\
 			  "id integer PRIMARY KEY AUTOINCREMENT);")
 	c.execute("CREATE TABLE IF NOT EXISTS services(id integer,"\
 			  "port integer, service TEXT, version TEXT, FOREIGN KEY(id)"\
@@ -123,6 +123,14 @@ def query(query):
 	table = c.fetchall()
 	return table
 
+def simpleQuery(query):
+	conn = sqlite3.connect(r'./machines.sqlite')
+	c = conn.cursor()
+	c.execute(query)
+	table = c.fetchall()
+	return table
+
+
 #The more efficient version
 def validateQuery(input):
 	if (len(input) == 1) & (input[0] == '*'):
@@ -131,6 +139,7 @@ def validateQuery(input):
 		return query
 	query = "select ip, port, service, version from hosts join services on hosts.id = services.id where ip = '%s' or port = '%s' or service = '%s' or version = '%s'" % (input, input, input, input)
 	return query
+
 
 #Old version
 def validateQuery2(input):
@@ -154,3 +163,18 @@ def validateQuery2(input):
 			query = "select ip, port, service, version from hosts join services on hosts.id = services.id where port = '%s'" % q[0]
 			return query
 
+
+def setPwned(target):
+	conn = sqlite3.connect(r'./machines.sqlite')
+	c = conn.cursor()
+	c.execute('update hosts set beenPwned = 1 where ip = "%s";' % target)
+	conn.commit()
+	conn.close()
+
+def setTalks(target1, target2):
+	conn = sqlite3.connect(r'./machines.sqlite')
+	c = conn.cursor()
+	target2 = ' ' + target2
+	c.execute('update hosts set talksTo = talksTo || "%s" where ip = "%s";' % (target2, target1))
+	conn.commit()
+	conn.close()
