@@ -43,8 +43,15 @@ def query():
 def scan():
 	global scanQue
 	arg = request.args.get('ip', type=str) #take user input
-	print(arg)
-	scanQue.append(arg)
+	if ' ' in arg:
+		ips = arg.split()
+		for target in ips:
+			scanQue.append(target)
+			print(target)
+	else:
+		print(arg)
+		scanQue.append(arg)
+	
 	return render_template('./index.html')
 
 
@@ -56,6 +63,10 @@ def showque():
 	global scanQue
 	return jsonify(scanQue)
 
+@app.route("/isscanning")
+def checkScanning():
+	global isScanning
+	return jsonify(isScanning)
 
 #If the queue is not empty and program is not currently scanning, 
 #take global variable scanQue and input it into gooeymap scan function
@@ -70,48 +81,12 @@ def startScan():
 		isScanning = False
 		del scanQue[0]
 		print('done')
-###################################################################################################################
-
-
-# TESTING DIFFERENT OUTPUT LAYOUTS
-
-
-
-
-# Builds the input needed for the vis.js graphics and passes
-# the input into the page to be displayed
-
-# @app.route("/graph")
-# def loadGraph():
-# 	data = gooeymap.query('select ip, port, service, version from hosts join services on hosts.id = services.id')
-# 	graph = 'dinetwork {'
-# 	for host in range(len(data)):
-# 		for info in range(len(data[0])):
-# 			thing = str(data[host][info])		# Cleaning some bad characters to make things easier for now
-# 			thing = thing.replace('-', '..')	# may find a more elegant way to fix this later.
-# 			thing = thing.replace(';', '')
-# 			thing = thing.replace(':', '')
-# 			thing = thing.replace('(', '')
-# 			thing = thing.replace(')', '')
-# 			thing = thing.replace(' ', '_')
-# 			graph += thing
-# 			if info == 0:
-# 				graph += ' -- '
-# 			elif info != len(data[0]) - 1:
-# 				graph += ' -- '
-# 		graph += ' ; '
-# 	graph += '}'
-# 	return render_template('./graph.html', graph = graph
-# 	)
-
-# 'select ip, port, service, version from hosts join services on hosts.id = services.id where version = "vsftpd 2.3.4"'
-
-#**********************************************************************
 
 @app.route("/graph")
 def loadGraph():
 	arg = request.args.get('g', type=str)
 	data = gooeymap.query(arg)
+	pwnedList = gooeymap.simpleQuery('select ip from hosts where beenPwned = 1')
 	graph = 'dinetwork {'
 	for host in range(len(data)):
 		for info in range(len(data[0])):
@@ -130,10 +105,26 @@ def loadGraph():
 				graph += '_NEWLINE_'
 		graph += ' ; '
 	graph += '}'
-	return render_template('./graph.html', graph = graph
-	)
+	print('list', pwnedList)
+	return render_template('./graph.html', graph = graph, pwned = pwnedList)
 
-###################################################################################################################
+
+@app.route("/pwned")
+def pwned():
+	target = request.args.get('target', type=str) 
+	gooeymap.setPwned(target)
+	return render_template('./index.html')
+
+@app.route("/talking")
+def talks():
+	target1 = request.args.get('target1', type=str) 
+	target2 = request.args.get('target2', type=str) 
+	gooeymap.setTalks(target1, target2)
+	return render_template('./index.html')
+
+
+
+
 #calls the startScan functino every 5 seconds
 
 scheduler = BackgroundScheduler()
