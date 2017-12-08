@@ -24,8 +24,12 @@
         <div class="filler">
           <!-- the code below is the Table header/title-->
           <div id="scanningdiv" class="scanningdiv">
-            <th class="scanningtitle">IPs currently being scanned:</th>
-              <div id="scanning" class="scanning">  
+            <div><th class="scanningtitle">IPs currently being scanned:</th></div>
+              <div id="loader"></div>
+              <div id="scanning" class="scanning"> 
+              	<!--  -->
+
+              	<!--  -->
               </div>
           </div>
         </div>
@@ -45,9 +49,8 @@
             <form action="/query" id="queryForm">
             <input type="text" name="q" placeholder="Enter query">
             <input type="submit" value="Search">
-            {% if condition %}
               <p class="input-instruction">Enter an ip, port number, service name, or service version. Enter * for all information</p>
-            {% endif %}
+
             </form>
           </div>
         </div>
@@ -97,7 +100,17 @@
         $.get('/showque', function(data, status){
           data = data.toString() 
           data = data.replace(/,/g, "<br>");
-        document.getElementById("scanning").innerHTML=data;
+        document.getElementById("iplist").innerHTML=data;
+        })
+        $.get('/isscanning', function(data, status){
+        	if(data){
+				console.log('its true')
+				document.getElementById("loader").innerHTML='<div class="loader"></div>';
+        	}else{
+				document.getElementById("loader").innerHTML=''
+        		console.log('its flase')
+        	}
+        // document.getElementById("scanning").innerHTML=data;
         })
       }, 500);
 
@@ -122,30 +135,77 @@
         </form>   
     </div>
 
+	</div>
 </div>
-
 <!-- ///////////////////////////////////////////////////////////////////////////////////// -->
 <!-- ///////////////////////////////////////////////////////////////////////////////////// -->
 <!-- ///////////////////////////////////////////////////////////////////////////////////// -->
-<div id="notes" class="tabcontent">
-    <span onclick="this.parentElement.style.display='none'" class="topright" id = "notesClose">x</span>
+<div id="notes" class="tabcontent">    
+	<span onclick="this.parentElement.style.display='none'" class="topright" id = "notesClose">x</span>
     <h3> Notes </h3>
-    <p>Add the notes input here.</p>
+    <p>Add the notes input.</p>
+            <div class="form-wapper"> 
+          <div class="form-scan">
+            <form action="/pwned">
+            <input type="text" name="target" placeholder="Enter IP">
+            <input type="submit" value="Search">
+            <p>Enter an ip that has been pwned</p>
+            </form>   
+          </div>
+          <br><br>
+          <br><br>
+
+          <div class="form-wapper"> 
+          <div class="form-scan">
+            <form action="/talking">
+            <input type="text" name="target1" placeholder="Enter IP">
+            <input type="submit" value="Search">
+            <input type="text" name="target2" placeholder="Enter IP">
+            <input type="submit" value="Search">
+            <p>Enter two ips that comminicate with each other</p>
+            </form>   
+          </div>
+
+    </div>
+	</div>
 </div>
 
+
+
+
+<!-- <div id="notes" class="tabcontent">
+    <span onclick="this.parentElement.style.display='none'" class="topright" id = "notesClose">x</span>
+        <div class="form-wapper"> 
+          <div class="form-scan">
+            <form action="/scan">
+            <input type="text" name="ip" placeholder="Enter IP">
+            <input type="submit" value="Search">
+            </form>   
+          </div>
+          <br><br>
+          <div class="form-wapper"> 
+          <div class="form-scan">
+            <form action="/scan">
+            <input type="text" name="ip" placeholder="Enter IP">
+            <input type="submit" value="Search">
+            </form>   
+          </div>
+          <br><br>
+</div>
+ -->
 <script>
 function openButton(evt, Tab) {
-   var i, tabcontent, tablinks;
-   tabcontent = document.getElementsByClassName("tabcontent");
-   for (i = 0; i < tabcontent.length; i++) {
-       tabcontent[i].style.display = "none";
-   }
-   tablinks = document.getElementsByClassName("tablinks");
-   for (i = 0; i < tablinks.length; i++) {
-       tablinks[i].className = tablinks[i].className.replace(" active", "");
-   }
-   document.getElementById(Tab).style.display = "block";
-   evt.currentTarget.className += " active";
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(Tab).style.display = "block";
+    evt.currentTarget.className += " active";
 }
 
 // Get the element with id="table" and click on it
