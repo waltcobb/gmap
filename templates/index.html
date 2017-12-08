@@ -98,9 +98,10 @@
       <script type = text/javascript>
       let checker = setInterval(function(){
         $.get('/showque', function(data, status){
-          data = data.toString() 
+          data = data.toString(); 
           data = data.replace(/,/g, "<br>");
-        document.getElementById("iplist").innerHTML=data;
+          console.log(data);
+          document.getElementById("scanning").innerHTML=data;
         })
         $.get('/isscanning', function(data, status){
         	if(data){
