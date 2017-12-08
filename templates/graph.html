@@ -13,7 +13,7 @@
 
     /*makes the visualization div the full screen for better view*/
     .visualization {    
-    position: fixed;		
+    position: fixed;    
     width: 100%;
     height: 100%;
     left: 0;
@@ -33,10 +33,23 @@
 
 var container = document.getElementById('visualization');
 
-var graph = '{{graph}}'; 
-graph =	graph.replace(/&gt;/g, ">");
-graph =	graph.replace(/\//g, "");
+var pwned = '{{pwned}}';
+var graph = '{{graph}}';
 
+
+graph = graph.replace(/&gt;/g, ">");
+graph = graph.replace(/\//g, "");
+pwned = pwned.replace(/&#39;/g, "");
+pwned = pwned.replace(/\)/g, "");
+pwned = pwned.replace(/\(/g, "");
+pwned = pwned.replace(/\,/g, "");
+pwned = pwned.replace(/\[/g, "");
+pwned = pwned.replace(/\]/g, "");
+
+pwned = pwned.split(" ");
+// pwned = pwned.replace(/,/g, "");
+
+console.log(typeof(pwned))
 
 var DOTstring = graph ;
 var parsedData = vis.network.convertDot(DOTstring);
@@ -46,23 +59,28 @@ var data = {
 }
 
 for (var i = data.nodes.length - 1; i >= 0; i--) {
-	var node = data.nodes[i];
-	node.label = node.label.replace(/_NEWLINE_/g, '\n')
-	node.label = node.label.replace(/_DASH_/g, '-')
-	node.label = node.label.replace(/_SPACE_/g, ' ')
-	node.label = node.label.replace(/_CLOSEPAR_/g, ')')
-	node.label = node.label.replace(/_OPENPAR_/g, '(')
-	node.label = node.label.replace(/_COLON_/g, ':')
-	node.label = node.label.replace(/_SEMICOLON_/g, ';')
-  node.label = node.label.replace(/_PLUS_/g, '+')
-  	if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(node.id)) {  
-		node.group = "host";  	
-	}else{
-		node.group = "info";
-	}
+  var node = data.nodes[i];
+  node.label = node.label.replace(/_NEWLINE_/g, '\n')
+  node.label = node.label.replace(/_DASH_/g, '-')
+  node.label = node.label.replace(/_SPACE_/g, ' ')
+  node.label = node.label.replace(/_CLOSEPAR_/g, ')')
+  node.label = node.label.replace(/_OPENPAR_/g, '(')
+  node.label = node.label.replace(/_COLON_/g, ':')
+  node.label = node.label.replace(/_SEMICOLON_/g, ';')
+  if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(node.id)) {  
+    if(pwned.indexOf(node.id) > -1){
+      node.group = "pwned";
+    }else{
+      node.group = "notpwned";
+    }
+
+  }else{
+    node.group = "info";
+  }
 }
 
 
+console.log(pwned);
 console.log(data);
 
 var options = {
@@ -79,7 +97,7 @@ var options = {
    "chosen": true,
    "color": {
       "color": "#848484",
-      "highlight": "#FFFFFF",
+      "highlight": "#354e93",
       "inherit": "from",
       "opacity":1.0
     },
@@ -91,21 +109,36 @@ var options = {
    },
 
   "groups": {
-  	
-  	"host": {
-  		"shape": "circle",
-  	},
+    
+    "pwned": {
+      "size": "50",
+      "shape": "circularImage",
+      "image": "../static/images/pwned.png",
+      "font": {
+        "color": "rgb(51, 247, 55)",
+      },
 
-  	"info": {
-  		"shape": "box",
-		"color": 'rgb(29, 130, 63)',
+    },
 
-  	},
+    "notpwned": {
+      "size": "50",
+      "shape": "circularImage",
+      "image": "../static/images/notpwned.png",
+      "font": {
+        "color": "rgb(51, 247, 55)",
+      },
+
+    },
+
+    "info": {
+      "shape": "box",
+      "color": 'rgb(0,255,140)',
+
+    },
   },
 
-
   "physics": {
-  	"enabled": true,
+    "enabled": true,
     "barnesHut": {
       "gravitationalConstant": -80000,
       "springConstant": 0.005, 
@@ -113,17 +146,15 @@ var options = {
       "avoidOverlap": 1,
       "damping": 1,
     },
-
     "minVelocity": 0.75,
     "stabilization": {
-	    "enabled": true,
-	    "iterations": 2000,
-	    "updateInterval": 25,
+      "enabled": true,
+      "iterations": 2000,
+      "updateInterval": 25,
     },
   }
 }
 var network = new vis.Network(container, data, options);
-
 // network.on("stabilizationIterationsDone", function () {
 //    network.setOptions( { physics: false } );
 // });
